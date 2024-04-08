@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::get('/users/{id}', [UserController::class, 'findById']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    Route::get('/books', [BookController::class, 'index']);
+    Route::post('/books', [BookController::class, 'store']);
+    Route::put('/books/{id}', [BookController::class, 'update']);
+    Route::get('/books/{id}', [BookController::class, 'findById']);
+    Route::delete('/books/{id}', [BookController::class, 'destroy']);
 });

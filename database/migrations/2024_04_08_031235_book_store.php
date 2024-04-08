@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id');
             $table->timestamps();
 
-            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
-            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('book_store');
+        Schema::dropIfExists('book_stores');
     }
 };

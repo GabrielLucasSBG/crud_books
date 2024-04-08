@@ -2,65 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Book\Models\Book;
-use App\Http\Requests\StoreBookRequest;
-use App\Http\Requests\UpdateBookRequest;
+use App\Domain\Book\Services\BookService;
+use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $bookService;
+
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
     public function index()
     {
-        //
+        try {
+            $books = $this->bookService->getAllBooks();
+            return response()->json(['books' => $books]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+//        $request->validate([
+//            'password' => 'required|min:6',
+//            'name' => 'required'
+//        ]);
+
+        try {
+            $books = $this->bookService->createBook($request->all());
+            return response()->json(['books' => $books], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBookRequest $request)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $books = $this->bookService->updateBook($id, $request->all());
+            return response()->json(['books' => $books]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Book $book)
+    public function findById($id)
     {
-        //
+        try {
+            $books = $this->bookService->findById($id);
+            if (!$books) {
+                return response()->json(['error' => 'Book not found'], 404);
+            }
+            return response()->json(['book' => $books]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Book $book)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBookRequest $request, Book $book)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Book $book)
-    {
-        //
+        try {
+            $books = $this->bookService->deleteBook($id);
+            return response()->json(['book' => $books]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
