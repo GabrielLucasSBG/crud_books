@@ -66,7 +66,7 @@ class StoreController extends Controller
     {
         try {
             $stores = $this->storeService->deleteStore($id);
-            return response()->json(['store' => $stores]);
+            return response()->json("Store deleted", 204);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

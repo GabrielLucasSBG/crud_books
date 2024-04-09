@@ -67,7 +67,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->deleteUser($id);
-            return response()->json(['user' => $user]);
+            return response()->json('User deleted', 204);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

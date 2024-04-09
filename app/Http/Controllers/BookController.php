@@ -67,7 +67,7 @@ class BookController extends Controller
     {
         try {
             $books = $this->bookService->deleteBook($id);
-            return response()->json(['book' => $books]);
+            return response()->json('Book deleted', 204);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
