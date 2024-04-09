@@ -10,4 +10,6 @@ class BookStore extends Model
     use HasFactory;
 
     protected $table = 'book_stores';
+
+    protected $fillable = ['book_id', 'store_id'];
 }

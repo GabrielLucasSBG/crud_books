@@ -26,10 +26,11 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-//        $request->validate([
-//            'password' => 'required|min:6',
-//            'name' => 'required'
-//        ]);
+        $request->validate([
+            'isbn' => 'required|numeric',
+            'name' => 'required',
+            'value' => 'required|numeric'
+        ]);
 
         try {
             $books = $this->bookService->createBook($request->all());
