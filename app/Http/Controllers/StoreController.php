@@ -2,65 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Store\Models\Store;
-use App\Http\Requests\StoreStoreRequest;
-use App\Http\Requests\UpdateStoreRequest;
+use App\Domain\Store\Services\StoreService;
+use Illuminate\Http\Request;
 
 class StoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $storeService;
+
+    public function __construct(StoreService $storeService)
+    {
+        $this->storeService = $storeService;
+    }
+
     public function index()
     {
-        //
+        try {
+            $stores = $this->storeService->getAllStores();
+            return response()->json(['stores' => $stores]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'address' => 'required|string',
+            'name' => 'required|string'
+        ]);
+
+        try {
+            $stores = $this->storeService->createStore($request->all());
+            return response()->json(['stores' => $stores], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreStoreRequest $request)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $stores = $this->storeService->updateStore($id, $request->all());
+            return response()->json(['stores' => $stores]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Store $store)
+    public function findById($id)
     {
-        //
+        try {
+            $stores = $this->storeService->findById($id);
+            if (!$stores) {
+                return response()->json(['error' => 'Book not found'], 404);
+            }
+            return response()->json(['store' => $stores]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Store $store)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateStoreRequest $request, Store $store)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Store $store)
-    {
-        //
+        try {
+            $stores = $this->storeService->deleteStore($id);
+            return response()->json(['store' => $stores]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
